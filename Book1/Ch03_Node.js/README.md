@@ -23,5 +23,5 @@ Chapter 03: Node.js
             f. author: 패키지를 만든 사람  
             g. license: 패키지의 라이선스  
         * 예시   
-            <img src="./ex_packagejson_conf.png" width="200" height="200"/>
+            <img src="./ex_packagejson_conf.png" width="600" height="400"/>
             
