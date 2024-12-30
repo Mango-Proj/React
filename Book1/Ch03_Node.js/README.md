@@ -14,7 +14,7 @@ Chapter 03: Node.js
         c. 'Is This Ok?' 에 대한 질문에 대하여 'Enter' Key 입력하면 패키지 초기화 완료됨
         d. 초기화가 완료되면, 'package.json'이라는 파일이 생성되어 있음 
     - 'package.json'
-        * 구성 항목
+        * 구성 항목  
             a. name: 패키지 이름  
             b. version: 패키지 버전   
             c. description: 패키지 설명 (보통 패키지를 구성한 프로그램 관련 설명을 작성)  
