@@ -25,8 +25,8 @@
             + description: 패키지 설명 (보통 패키지를 구성한 프로그램 관련 설명을 작성)<br/>
             + main: 패키지의 소스 코드 파일 중 메인 역할을 담당하는 소스 코드 파일<br/>
             + scripts: 패키지를 쉽게 다루기 위해 지정한 매크로 명령어<br/>
+                + ex. 'npm run start': package.json 파일의 'script' key의 data에서 'start'라는 항목을 찾아서 해당 명령어 실행 
             + author: 패키지를 만든 사람<br/>
             + license: 패키지의 라이선스<br/>
         * 예시<br/>
             <img src="./ex_packagejson_conf.png" width="600" height="300"/>
-            
