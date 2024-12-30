@@ -1,9 +1,9 @@
-#Chapter 03: Node.js
+# Chapter 03: Node.js
 <hr/>
-##1. Node.js 란? 
-##2. 설치 방법
+## Node.js 란? 
+## 설치 방법
     - 이하 생략 
-##3. npm (node package manager)
+## npm (node package manager)
     - 여러 파일을 하나의 파일처럼 관리해주는 단위<br/>
     - 최상위 폴더인 '루트 폴더' 존재<br/>
     - 패키지 만들기<br/>
