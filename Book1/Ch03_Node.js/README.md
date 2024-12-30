@@ -30,3 +30,17 @@
             + license: 패키지의 라이선스<br/>
         * 예시<br/>
             <img src="./ex_packagejson_conf.png" width="600" height="300"/>
+
+## Module System
+- 독립적으로 존재하는 프로그램의 일부
+- 재사용 가능
+- 예시: In 쇼핑몰 웹 사이트 -> 로그인, 장바구니, 상품 구매 기능, 등
+- ES Module System
+    * ECMAScript (ESM)
+    * 가장 최근에 개발된 모듈 시스템
+    * React, Vue 등의 최신 프론트엔드에서 해당 기술이 채택되어 사용되는 중
+    * 설정 방법:
+        + Node.js: 기본적으로 CJS 모듈 시스템 사용
+        + ESM 사용을 위해 'package.json'에서 설정 변경 필요 (변경 안 하고 사용 시 Error 발생!)
+        + '"type": "module"' 항목 추가 
+        + 예시<br/><img src="./ex_packagejson_conf.png" width="600" height="300"/>
