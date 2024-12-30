@@ -6,10 +6,10 @@ Chapter 03: Node.js
 3. npm (node package manager)
     - 여러 파일을 하나의 파일처럼 관리해주는 단위
     - 최상위 폴더인 '루트 폴더' 존재 
-    - 패키지 만들기 
+    - 패키지 만들기   
         a. 'npm init' 명령어 입력  
-            -> node package manager 초기화 명령어   
-            -> 최소한의 구성요소 자동 생성   
+            - node package manager 초기화 명령어   
+            - 최소한의 구성요소 자동 생성   
         b. 명령어 입력 후, page 이름, 버전, 등 필요사항에 대한 내용 및 확인(Enter Key) 입력  
         c. 'Is This Ok?' 에 대한 질문에 대하여 'Enter' Key 입력하면 패키지 초기화 완료됨  
         d. 초기화가 완료되면, 'package.json'이라는 파일이 생성되어 있음   
