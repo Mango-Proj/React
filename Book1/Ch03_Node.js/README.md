@@ -1,13 +1,15 @@
 # Chapter 03: Node.js
+
 <hr/>
+
 ## Node.js 란? 
 ## 설치 방법
-    - 이하 생략 
+- 이하 생략 
 ## npm (node package manager)
-    - 여러 파일을 하나의 파일처럼 관리해주는 단위<br/>
-    - 최상위 폴더인 '루트 폴더' 존재<br/>
-    - 패키지 만들기<br/>
-        a. 'npm init' 명령어 입력<br/>
+- 여러 파일을 하나의 파일처럼 관리해주는 단위<br/>
+- 최상위 폴더인 '루트 폴더' 존재<br/>
+- 패키지 만들기<br/>
+* 'npm init' 명령어 입력<br/>
             - node package manager 초기화 명령어<br/>
             - 최소한의 구성요소 자동 생성<br/>
         b. 명령어 입력 후, page 이름, 버전, 등 필요사항에 대한 내용 및 확인(Enter Key) 입력<br/>
