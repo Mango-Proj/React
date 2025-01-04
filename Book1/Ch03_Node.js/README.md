@@ -43,4 +43,35 @@
         + Node.js: 기본적으로 CJS 모듈 시스템 사용
         + ESM 사용을 위해 'package.json'에서 설정 변경 필요 (변경 안 하고 사용 시 Error 발생!)
         + '"type": "module"' 항목 추가 
-        + 예시<br/><img src="./ex_packagejson_conf.png" width="600" height="300"/>
+        + 예시<br/><img src="./ex_packagejson_esmset.png" width="600" height="300"/>
+- Import / Export
+    * 하나의 모듈에서 data(변수, 함수)를 불러오거나 내보낼 때 사용
+    * Import (불러오기)
+        + 형식(일부): 'import {data...} from "filename"
+        + 형식(전부): 'import * as A from B'
+            + B에 있는 데이터를 전부 불러올 수 있음
+            + A.(data) 형식으로 데이터에 접근 가능
+    * Export (내보내기)
+        + 형식: 내보내고자 하는 변수 혹은 함수 앞에 'export' 표시 
+        + 'default': 모듈의 기본값으로 내보낼 때 사용
+    * 예시: 'circle.js' 및 'index.js'의 Example 02 참조
+
+## Library (라이브러리) 
+- node.js 패키지 이외의 외부 패키지s
+- 프로그램을 개발할 때 공통으로 사용할 수 있는 기능들을 모아 모듈화 한 것 
+- Reference: https://www.npmjs.com 
+    + 전 세계 개발자들이 만든 라이브러리가 등록되어 있음 
+    + 오픈 소스 
+    + 설치 방법:
+        + 해당 URL에 접속하여 원하는 라이브러리를 선택
+        + 선택한 라이브러리의 설치 명령어를 입력하여 설치 
+        + 명령어를 입력하면 해당 웹사이트에서 패키지를 불러와서 자동으로 설치함
+        + 섩치과 완료되면 'node_modules'폴더와 'package.json' 및 'package-lock.json'의 'dependencies'항목에 해당 패키지 관련 내용이 추가되어 있음. 
+- 라이브러리 재설치 
+    + 'node_modules' 
+        + 외부 라이브러리가 실제로 설치되는 곳 
+        + 가장 용량이 큼
+        + 보통 어디에 올리거나 공유할 때, 해당 폴더를 제외하고 올림
+        + 해당 프로젝트(패키지)를 공유받은 사람은 해당 폴더가 없으므로 라이브러리 사용이 어려움
+        + 이 때 'npm install'명령어를 사용하면 'package.json' 및 'package-lock.json' 파일에 들어있는 내용을 토대로 라이브러리를 설치하게 됨
+        + 따라서 두 파일의 보존이 매우 중요  
