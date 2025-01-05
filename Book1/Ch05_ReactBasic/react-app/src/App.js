@@ -29,12 +29,48 @@ const Header = () => {
 */
 
 //App 컴포넌트 내부에 Header 컴포넌트를 감싸서 작성 
+//Props을 전달하려는 컴포넌트 동일한 이름의 props 할당
+/*
+//하나 이상의 Props 전달
 function App() {
+  const name = "이정환";
   return (<div className="App">
     <Header/>
-    <Body/>
+    <Body name={name} location={"부천시"}/> 
     <Footer/>
   </div>);
 }
+*/
+/*
+// Spread 연산자 사용
+function App(){
+  const BodyProps = {
+    name: "이정환",
+    location: "부천시",
+    //favorList: ["파스타", "빵", "떡볶이"],
+  };
 
+  return (
+    <div className="App">
+      <Header/>
+      <Body {...BodyProps}/>
+      <Footer/>
+    </div>
+  );
+}
+*/
+function ChildComp(){
+  return <div>child component</div>;
+}
+function App(){
+  return (
+    <div className="App">
+      <Header/>
+      <Body>
+        <ChildComp/>
+      </Body>
+      <Footer/>
+    </div>
+  );
+}
 export default App;
