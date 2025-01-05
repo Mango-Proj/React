@@ -58,3 +58,20 @@
 
     + (별도로 발생한 ERROR) : Can't resolve 'web-vitals'. 
         + 'npm i web-vitals --save-dev' 명령어를 실행하여 web-vitals 설치하여 해결 
+        + 참고 Reference: https://stackoverflow.com/questions/65396568/react-js-npm-start-shows-failed-to-compile-web-vitals
+
+## React App 동작 원리 
+- 'creat-react-app'으로 생성된 리액트 앱에는 웹 서버가 내장되어 있음 
+    + 'npm run start' 실행 시 브라우저가 리액트 앱에 접속하도록 내장된 웹 서버가 동작
+    + 내장된 웹 서버 주소로 브라우저가 자동으로 접속 
+    + 기본적으로 리액트 앱 주소는 'https://localhost:3000'으로 되어 있음
+        + localhost: 내 컴퓨터으 주소 
+        + 3000: 포트 번호 
+        + 하나의 컴퓨터에서 여러 개의 서버가 실행될 때, 포트 번호로 각각을 구분하여 특정 포트 번호에 대한 요청이 들어올 때 관련 서버에서만 응답에 대한 요청 처리하도록 구분하는 것 
+- 상세 동작 원리 
+    1. 기본적으로 리액트 앱이 실행되어 'https://localhost:3000'으로 앱에 대한 서비스 요청하면, 'public'폴더의 'index.html'을 응답으로 보냄 
+    2. 앱이 실행되면, 'index.html'에 자동으로 할당되는 'bundle.js'를 불러옴
+        + 'bundle.js'는 'src'폴더에 있는 'index.js'와 해당 파일이 불러오는 모듈을 하나로 묶는 파일
+        + 따라서, index.js가 작성한 코드에 따라 동작
+    3. 'index.js'에서는 'ReactDOM.creatRoot' 메서드로 리액트 앱의 루트가 될 요소를 지정
+    4. 'render' 메서드를 사용하여 루트 아래에 자식 컴포넌트를 추가하는데, App 컴포넌트를 추가하기 때문에, 'App.js'에 할당된 내용이 추가된 것
