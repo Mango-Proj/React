@@ -1,0 +1,36 @@
+/*
+ * 03_Box.module.css — Box 컴포넌트 CSS 모듈
+ * ============================================
+ * 파일명에 .module.css 확장자를 붙이면 CSS 모듈로 동작합니다.
+ *
+ * CSS 모듈의 핵심:
+ * 여기에 정의된 .color 클래스는 빌드 시
+ * "Box_color__abc123" 처럼 고유한 이름으로 자동 변환됩니다.
+ * Button.module.css의 .color와 이름이 달라져 충돌이 없습니다.
+ */
+
+/* Box 컴포넌트 전용 스타일 */
+.box {
+  padding: 16px 20px;
+  border-radius: 10px;
+  display: inline-block;
+  font-weight: 700;
+  font-size: 1rem;
+  margin: 8px;
+}
+
+/*
+ * .color 클래스: Box에서는 하늘색 배경 + 흰 글자
+ * Button.module.css에도 .color가 있지만 충돌하지 않습니다.
+ * 빌드 후 실제 클래스명이 달라지기 때문입니다.
+ */
+.color {
+  background-color: skyblue;
+  color: white;
+}
+
+/* :hover 같은 가상 선택자도 사용할 수 있습니다 (인라인 스타일과의 차이) */
+.box:hover {
+  opacity: 0.85;
+  cursor: pointer;
+}

@@ -1,0 +1,29 @@
+/*
+ * 01_vanilla_Header.css — 헤더 컴포넌트 CSS
+ * ===========================================
+ * 바닐라(일반) CSS 방식의 스타일 파일입니다.
+ *
+ * ⚠️ 문제점:
+ * 이 파일에 정의된 .title 클래스는 전역(global)으로 적용됩니다.
+ * Footer.css에도 같은 .title 클래스가 있으면 충돌이 발생합니다.
+ */
+
+/* 헤더 레이아웃 */
+.header-wrap {
+  background-color: #1e40af;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/*
+ * ⚠️ 충돌 위험 클래스
+ * Footer.css의 .title과 동일한 클래스명입니다.
+ * 두 CSS 파일이 모두 import 되면 마지막에 import된 쪽이 이 스타일을 덮어씁니다.
+ */
+.title {
+  font-size: 24px;
+  color: blue;        /* 원하는 색상: 파란색 */
+  margin: 0;
+}

@@ -1,0 +1,41 @@
+/*
+ * 03_Button.module.css — Button 컴포넌트 CSS 모듈
+ * ================================================
+ * Box.module.css에도 .color 클래스가 있습니다.
+ * 하지만 CSS 모듈 덕분에 빌드 후 실제 클래스명이 달라져
+ * 서로 충돌하지 않습니다.
+ */
+
+/* Button 컴포넌트 전용 스타일 */
+.button {
+  padding: 10px 24px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin: 6px;
+  transition: opacity 0.2s;
+}
+
+/*
+ * .color 클래스: Button에서는 분홍색 배경 + 검은 글자
+ * Box.module.css의 .color(skyblue + white)와 이름이 같지만
+ * 모듈 시스템이 각각 고유한 클래스명으로 변환하므로 충돌 없음.
+ */
+.color {
+  background-color: pink;
+  color: black;
+}
+
+.button:hover {
+  opacity: 0.8;
+}
+
+/* 비활성화 상태 */
+.disabled {
+  background-color: #ccc;
+  color: #888;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
