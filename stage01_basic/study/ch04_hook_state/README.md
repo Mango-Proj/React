@@ -1,316 +1,297 @@
-1️⃣  컴포넌트의 생명 주기
-컴포넌트는 생성(마운트), 업데이트, 제거(언마운트)의 과정을 거칩니다. 
-이 과정을 컴포넌트의 '생명 주기(life cycle)'라고 부릅니다. 
+# ch04 — Hook과 상태 관리
 
+> 비전공자도 이해하기 쉽게 비유로 배우는 React 상태 관리 심화
 
-마운트
+---
 
-컴포넌트가 화면에 처음 삽입될 때 발생합니다.
-외부 시스템과의 연결이나 데이터 요청과 같은 초기 설정이 주로 이루어집니다.
+## 목차
 
+1. [컴포넌트 생명 주기](#1-컴포넌트-생명-주기)
+2. [useEffect — 외부와 소통하기](#2-useeffect--외부와-소통하기)
+3. [useEffect 실전 패턴](#3-useeffect-실전-패턴)
+4. [state 설계 원칙 4가지](#4-state-설계-원칙-4가지)
+5. [객체·배열 state 업데이트](#5-객체배열-state-업데이트)
+6. [핵심 키워드 정리](#6-핵심-키워드-정리)
 
-업데이트
+---
 
-컴포넌트의 상태나 속성의 변화로 인해 리렌더링이 발생합니다.
-업데이트된 데이터로 화면을 갱신하는 작업이 이루어집니다.
+## 1. 컴포넌트 생명 주기
 
+### 비유: 화분의 일생
 
-⚠️ 여기서 잠깐!
-컴포넌트의 업데이트가 발생하는 조건은 다음과 같습니다.
+컴포넌트는 화면에 나타나고 사라지는 과정을 거칩니다.  
+마치 화분처럼 심고(마운트), 물을 주고(업데이트), 꽃이 지는(언마운트) 3단계가 있습니다.
 
-컴포넌트의 state가 변경됐을 때
-전달받은 props가 변경됐을 때
-부모 컴포넌트가 업데이트되어 영향을 받았을 때
+```
+[심기 🌱]  →  [물주기 💧]  →  [꽃이 짐 🍂]
+  마운트         업데이트        언마운트
+(처음 등장)   (상태/props 변화)   (화면에서 제거)
+```
 
+| 단계 | 언제 발생? | 하는 일 |
+|------|-----------|---------|
+| **마운트** | 컴포넌트가 화면에 처음 등장 | API 데이터 불러오기, 타이머 시작 |
+| **업데이트** | state 또는 props가 바뀔 때 | 변경된 데이터로 화면 갱신 |
+| **언마운트** | 컴포넌트가 화면에서 사라질 때 | 타이머 정리, 이벤트 리스너 해제 |
 
-언마운트
+### 업데이트가 발생하는 3가지 조건
 
-컴포넌트가 화면에서 제거될 때 발생합니다.
-외부 시스템과의 연결 해제와 같은 정리 작업이 이루어집니다.
+```
+1. 컴포넌트의 state가 변경됐을 때
+2. 전달받은 props가 변경됐을 때
+3. 부모 컴포넌트가 업데이트됐을 때
+```
 
+---
 
-2️⃣ useEffect
-컴포넌트와 외부 시스템을 동기화하기 위한 React 훅입니다.
-컴포넌트의 생명 주기에 따른 부수 효과를 처리할 수 있습니다.
-부수 효과란 컴포넌트 외부와의 상호작용(외부 시스템 연결, 데이터 가져오기 등)을 의미합니다.
+## 2. useEffect — 외부와 소통하기
 
+### 비유: 알림 서비스 구독
 
-3️⃣ useEffect의 구조
-useEffect에는 2개의 인자로 setup 함수, 의존성 배열을 전달할 수 있습니다.
-반환값은 undefined입니다.
-// useEffect의 기본 구조
-useEffect(setup, dependencies);
+`useEffect`는 **"화면에 나타나면 구독 시작, 사라지면 구독 해제"** 하는 알림 서비스입니다.
 
-// useEffect에 setup 함수와 의존성 배열 전달
+예를 들어 날씨 앱을 만든다면:
+- 앱이 켜지면(마운트) → 날씨 데이터 요청 시작
+- 도시가 바뀌면(업데이트) → 새 도시 날씨 재요청
+- 앱이 꺼지면(언마운트) → 실시간 업데이트 연결 해제
+
+### 기본 구조
+
+```jsx
 useEffect(() => {
-  // * 설정 코드 *
-}, []);
+  // ① 설정 코드 (마운트 / 업데이트 시 실행)
+  console.log('효과 시작!');
 
-// useEffect의 setup 함수 내에서 정리 함수 반환
-useEffect(() => {
-  // * 설정 코드 *
   return () => {
-    // * 정리 코드 *
+    // ② 정리 코드 (언마운트 / 다음 업데이트 전 실행)
+    console.log('이전 효과 정리!');
   };
-}, []);
+}, [의존성]);  // ③ 언제 실행할지 결정하는 배열
+```
 
+### 의존성 배열의 3가지 형태
 
-setup 함수
+```jsx
+// 형태 1: 배열 생략 → 렌더링마다 매번 실행 (잘 안 씀)
+useEffect(() => { ... });
 
-useEffect의 첫 번째 인자입니다. 
-컴포넌트의 생명 주기에 따라 수행할 설정 코드의 로직이 포함된 함수입니다.
-setup 함수 내에서 선택적으로 정리 함수(cleanup function)를 반환할 수 있습니다.
-정리 코드는 컴포넌트가 언마운트 되거나 업데이트가 감지되면 이전 값을 기반으로 실행됩니다.
-설정 코드는 컴포넌트가 마운트 되거나 업데이트가 감지되면 새로운 값을 기반으로 실행됩니다.
+// 형태 2: 빈 배열 [] → 마운트 시 딱 한 번만 실행
+useEffect(() => { ... }, []);
 
+// 형태 3: 값이 있는 배열 → 해당 값이 바뀔 때마다 실행
+useEffect(() => { ... }, [userId, isLoggedIn]);
+```
 
-의존성 배열(dependencies array)
+| 의존성 배열 | 실행 시점 | 사용 예 |
+|------------|---------|---------|
+| 생략 | 매 렌더링마다 | (거의 사용 안 함) |
+| `[]` | 마운트 시 1번 | 초기 데이터 불러오기 |
+| `[value]` | value 바뀔 때마다 | 검색어 변경 시 재요청 |
 
-useEffect의 두 번째 인자입니다.
-setup 함수가 언제 실행될지 결정하는 배열입니다.
-배열에 포함된 값이 변경될 때 setup 함수의 로직이 다시 실행됩니다. 
-빈 배열이 오거나 배열을 생략할 수 있습니다.
-빈 배열의 경우 컴포넌트가 마운트 될 때만 효과가 실행되고, 배열을 생략하면 렌더링마다 setup 함수 로직이 실행됩니다.
+### 생명 주기별 동작 순서
 
+```
+마운트:   설정 코드 실행
+업데이트: 정리 코드(이전 값) → 설정 코드(새로운 값)
+언마운트: 정리 코드 실행
+```
 
-➕ 컴포넌트 생명 주기에 따른 useEffect 동작 방식
- 마운트 시 
+---
 
-설정 코드가 동작합니다.
+## 3. useEffect 실전 패턴
 
+### 패턴 1 — 마운트 시 데이터 불러오기
 
-업데이트 시
-
-의존성이 변경된 컴포넌트가 리렌더링 될 때마다 아래 동작을 수행합니다.
-먼저 정리 코드가 오래된 props, state와 함께 실행됩니다.
-이후 설정 코드가 새로운 props, state와 함께 실행됩니다.
-
-
-언마운트 시
-
-정리 코드가 동작합니다.
-
-
-4️⃣ useState와 useEffect의 조합
-// DataLoader.js
-
-import React, { useEffect, useState } from 'react';
-
+```jsx
 function DataLoader() {
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    console.log('데이터를 로드하기 시작합니다...');
     setTimeout(() => {
-      setData({ message: '데이터 로드가 완료되었습니다!' });
+      setData({ message: '데이터 로드 완료!' });
       setIsLoading(false);
-      console.log('데이터 로드가 완료되었습니다!');
     }, 2000);
-  }, []);
-  return <div>{isLoading ? '로딩 중' : data.message}</div>;
+  }, []); // 마운트 시 1번만
+
+  return <div>{isLoading ? '로딩 중...' : data.message}</div>;
 }
+```
 
-export default DataLoader;
+### 패턴 2 — 조건에 따라 다르게 불러오기
 
-[결과]
-
-[결과]
-useState로 로딩 상태와 데이터를 관리합니다.
-useEffect로 컴포넌트 마운트 후 2초 뒤 데이터를 로드합니다.
-로딩 중에는 로딩 메시지, 로딩 후에는 데이터 메시지를 표시합니다.
-useEffect의 빈 의존성 배열은 컴포넌트가 처음 나타날 때만 작업을 수행합니다.
-애플리케이션 실행 시 로딩 시작 메시지가 표시되고, 2초 후 데이터 로딩 완료 메시지가 출력됩니다.
-
-
-
-1️⃣ useEffect로 데이터 가져오기
-의존성 배열에 빈 배열을 전달하면, 컴포넌트 마운트 시 데이터 로드가 한 번만 실행됩니다.
-// UserInfo.js
-import React, { useState, useEffect } from 'react';
-
-function UserInfo() {
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    // 외부 API를 통한 비동기 호출 가정
-    // setTimeout 활용해 1초 후 사용자 정보 설정
-    setTimeout(() => {
-      setUser({
-        username: 'JohnDoe',
-        watchedVideos: [
-          { id: 101, title: 'Video 1' },
-          { id: 102, title: 'Video 2' },
-        ],
-      });
-    }, 1000);
-  }, []);
-
-  if (!user) {
-    return <div>로딩 중...</div>;
+```jsx
+// isLoggedIn 값이 바뀔 때마다 실행
+useEffect(() => {
+  if (isLoggedIn) {
+    // 로그인 상태 → 사용자 정보 불러오기
+    fetchUserData();
+  } else {
+    // 로그아웃 → 사용자 정보 초기화
+    setUser(null);
   }
+}, [isLoggedIn]); // isLoggedIn이 바뀔 때 재실행
+```
 
-  return (
-    <div>
-      <h1>{user.username}님 환영합니다!</h1>
-      <h2>시청한 비디오:</h2>
-      <ul>
-        {user.watchedVideos.map(video => (
-          <li key={video.id}>{video.title}</li>
-        ))}
-      </ul>
-    </div>
-  );
-}
+### 패턴 3 — 이벤트 리스너 등록 + 정리
 
-export default UserInfo;
-
-
-
-[결과] 마운트 된 후 1초
-
-[결과] 1초 뒤 업데이트
-컴포넌트가 마운트 된 후 1초 동안 로딩 메시지가 표시됩니다.
-데이터가 로드되면 사용자 정보가 화면에 표시됩니다. 
-
-
-2️⃣ useEffect로 조건부 데이터 가져오기
-의존성 배열에 조건을 나타내는 상태 변수를 추가합니다.
-조건의 변화에 따라 필요한 데이터를 가져옵니다.
-// UserInfo.js
-import React, { useState, useEffect } from 'react';
-
-function UserInfo({ isLoggedIn }) {
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      // 로그인 상태일 때 사용자 정보 로딩
-      setTimeout(() => {
-        setUser({
-          username: 'JohnDoe',
-          watchedVideos: [
-            { id: 101, title: 'Video 1' },
-            { id: 102, title: 'Video 2' },
-          ],
-        });
-      }, 1000);
-    } else {
-      // 로그아웃 상태일 때 사용자 정보 초기화
-      setUser(null);
-    }
-  }, [isLoggedIn]);
-
-  if (!isLoggedIn) {
-    return <div>로그인해 주세요.</div>;
+```jsx
+useEffect(() => {
+  function handleMove(e) {
+    setPosition({ x: e.clientX, y: e.clientY });
   }
+  
+  window.addEventListener('pointermove', handleMove);  // 등록
+  
+  return () => {
+    window.removeEventListener('pointermove', handleMove); // 정리 (메모리 누수 방지)
+  };
+}, []);
+```
 
-  if (!user) {
-    return <div>로딩 중...</div>;
-  }
+> 💡 **정리 함수가 중요한 이유**: 이벤트 리스너를 해제하지 않으면 컴포넌트가 사라져도  
+> 메모리에 계속 남아 **메모리 누수(memory leak)** 가 발생합니다.
 
-  return (
-    <div>
-      <h1>{user.username}님 환영합니다!</h1>
-      <h2>시청한 비디오:</h2>
-      <ul>
-        {user.watchedVideos.map(video => (
-          <li key={video.id}>{video.title}</li>
-        ))}
-      </ul>
-    </div>
-  );
-}
+---
 
-export default UserInfo;
-useEffect의 의존성 배열에 isLoggedIn을 추가합니다.
-isLoggedIn 값이 변경될 때마다 useEffect 내의 부수 효과가 실행됩니다. 
+## 4. state 설계 원칙 4가지
 
+### 원칙 1 — 연관된 state 묶기
 
-isLoggedIn이 true 일 때
+항상 함께 바뀌는 값은 하나의 객체로 묶으세요.
 
-컴포넌트가 마운트 되거나 업데이트될 때 1초 동안 로딩 메시지를 표시합니다.
-1초 뒤 사용자 정보를 화면에 표시합니다.
+```jsx
+// ❌ 나쁜 예: 항상 함께 바뀌는데 따로 관리
+const [x, setX] = useState(0);
+const [y, setY] = useState(0);
+setX(e.clientX);
+setY(e.clientY); // setX, setY 두 번 호출
 
+// ✅ 좋은 예: 하나의 객체로 묶기
+const [position, setPosition] = useState({ x: 0, y: 0 });
+setPosition({ x: e.clientX, y: e.clientY }); // 한 번에!
+```
 
-isLoggedIn이 false 일 때
+### 원칙 2 — 불필요한 state 피하기
 
-컴포넌트가 마운트 되거나 업데이트될 때 user 값을 null로 설정합니다.
-‘로그인해 주세요.’ 메시지를 화면에 표시합니다.
+다른 state에서 **계산 가능한 값**은 새 state로 만들지 않습니다.
 
+```jsx
+// ❌ 나쁜 예: fullName을 별도 state로 관리 (중복 상태!)
+const [firstName, setFirstName] = useState('');
+const [lastName, setLastName] = useState('');
+const [fullName, setFullName] = useState('');  // ← 불필요!
 
-// App.js 
-import React, { useState } from 'react';
-import UserInfo from './UserInfo';
+// ✅ 좋은 예: 렌더링 시 계산
+const [firstName, setFirstName] = useState('');
+const [lastName, setLastName] = useState('');
+const fullName = `${firstName} ${lastName}`;  // 계산으로 충분
+```
 
-function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+### 원칙 3 — state 모순 피하기
 
-  return (
-    <div>
-      <button onClick={() => setIsLoggedIn(!isLoggedIn)}>
-        {isLoggedIn ? 'Logout' : 'Login'}
-      </button>
-      <UserInfo isLoggedIn={isLoggedIn} />
-    </div>
-  );
-}
+서로 충돌 가능한 여러 state 대신, **하나의 상태값**으로 관리하세요.
 
-export default App;
+```jsx
+// ❌ 나쁜 예: isSending과 isSent가 동시에 true가 될 수 있음
+const [isSending, setIsSending] = useState(false);
+const [isSent, setIsSent] = useState(false);
 
+// ✅ 좋은 예: 하나의 status로 통합
+const [status, setStatus] = useState('typing'); // 'typing' | 'sending' | 'sent'
+const isSending = status === 'sending';
+const isSent = status === 'sent';
+```
 
+### 원칙 4 — 불변성 유지하기
 
-[결과]
+### 비유: 원본 서류와 사본
 
-[결과]
+불변성이란 **원본을 건드리지 않고 복사본을 새로 만들어 수정**하는 원칙입니다.
 
-[결과]
-App 컴포넌트에서는 로그인 상태를 관리하며, UserInfo 컴포넌트로 로그인 상태를 전달합니다.
-버튼을 클릭할 경우 isLoggedIn의 불리언 값이 반전됩니다.
-UserInfo 컴포넌트의 useEffect의 의존성 배열에는 isLoggedIn이 있어, 부수 효과 로직이 실행됩니다.
+```
+원본 서류 (state) → 그대로 유지
+      ↓ 복사
+사본 + 변경 내용 → setState에 전달 → 화면 업데이트
+```
 
+```jsx
+// ❌ 잘못된 방법: 원본 직접 수정 (React가 변경 감지 못함!)
+state.count = state.count + 1;  // ← 이렇게 하면 리렌더링 안 됨
 
-3️⃣ useEffect로 마우스 포인터 만들기
-의존성 배열을 빈 배열로 설정해 컴포넌트 마운트 시 마우스 포인터에 대한 이벤트 리스너를 등록합니다.
-정리 함수를 사용해 컴포넌트 언마운트 시 마우스 포인터에 대한 이벤트 리스너를 해제합니다.
+// ✅ 올바른 방법: 새 값을 setState에 전달
+setCount(count + 1);  // ← 새 값 전달
+setUser({ ...user, name: '새이름' });  // ← 복사 후 변경
+```
 
+> 💡 **왜 직접 수정하면 안 될까?**  
+> React는 "참조 주소"만 비교합니다. 내부 값만 바꾸면 같은 주소라 변경을 감지 못해  
+> 화면이 업데이트되지 않습니다.
 
-// App.js
-import { useState, useEffect } from 'react';
+---
 
-function App() {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+## 5. 객체·배열 state 업데이트
 
-  useEffect(() => {
-    function handleMove(e) {
-      setPosition({ x: e.clientX, y: e.clientY });
-    }
-    window.addEventListener('pointermove', handleMove);
-    return () => {
-      window.removeEventListener('pointermove', handleMove);
-    };
-  }, []);
+### 객체 state 업데이트
 
-  return (
-    <div style={{
-      position: 'absolute',
-      backgroundColor: 'blue',
-      borderRadius: '50%',
-      transform: `translate(${position.x}px, ${position.y}px)`,
-      pointerEvents: 'none',
-      left: -20,
-      top: -20,
-      width: 40,
-      height: 40,
-    }} />
-  );
-}
+스프레드 연산자(`...`)로 기존 객체를 복사하고, 바꿀 값만 덮어씁니다.
 
-export default App;
+```jsx
+// 이름만 변경, 나머지는 그대로
+setUser({ ...user, name: '새이름' });
 
-[결과]
-마우스 포인터의 x, y 좌표를 객체 형태의 상태로 관리합니다.
-handleMove()는 마우스 포인터의 위치를 추적하고, <div> 요소의 스타일을 업데이트합니다.
-이벤트 핸들러는 pointermove 이벤트를 감지해 사용자의 움직임에 따라 상태를 업데이트합니다.
-마우스 좌표를 <div> 요소의 style 객체 속성에 반영해 포인터를 움직입니다.
-정리 함수를 사용해 컴포넌트가 언마운트 될 때 handleMove()를 pointermove 이벤트에서 해제합니다.
+// 중첩 객체 변경 (주소의 city만 변경)
+setUser({
+  ...user,           // 바깥 객체 복사
+  address: {
+    ...user.address, // 내부 address 복사
+    city: '부산',    // city만 변경
+  },
+});
+```
+
+### 배열 state 업데이트
+
+```jsx
+// 항목 추가: 스프레드로 새 배열 생성
+setTodos([...todos, newTodo]);
+
+// 항목 삭제: filter로 새 배열 생성
+setTodos(todos.filter(todo => todo.id !== targetId));
+
+// 항목 수정: map으로 새 배열 생성
+setTodos(todos.map(todo =>
+  todo.id === targetId ? { ...todo, done: true } : todo
+));
+```
+
+> ⚠️ **주의**: `push`, `pop`, `splice` 같은 배열 직접 수정 메서드는 사용하지 않습니다.  
+> `filter`, `map`, 스프레드 연산자처럼 **새 배열을 반환하는 방법**을 사용하세요.
+
+---
+
+## 6. 핵심 키워드 정리
+
+| 키워드 | 한 줄 설명 |
+|--------|-----------|
+| `마운트` | 컴포넌트가 화면에 처음 등장하는 것 |
+| `언마운트` | 컴포넌트가 화면에서 사라지는 것 |
+| `업데이트` | state/props 변화로 리렌더링되는 것 |
+| `useEffect` | 마운트/업데이트/언마운트 시 작업을 등록하는 훅 |
+| `setup 함수` | useEffect의 첫 번째 인자. 설정 코드가 담김 |
+| `정리 함수` | setup 함수가 반환하는 함수. 이전 효과를 정리함 |
+| `의존성 배열` | useEffect가 언제 재실행될지 결정하는 두 번째 인자 |
+| `불변성` | 원본을 수정하지 않고 새 복사본으로 상태를 바꾸는 원칙 |
+| `스프레드 연산자` | `{ ...obj }` — 객체/배열 복사 시 사용 |
+| `메모리 누수` | 정리 함수 없이 이벤트 리스너가 계속 쌓이는 현상 |
+| `얕은 비교` | React가 참조 주소만 보고 변경 여부를 판단하는 방식 |
+
+---
+
+## 예제 파일 안내
+
+| 파일 | 내용 |
+|------|------|
+| `01_lifecycle_useEffect.jsx` | 생명 주기 시각화, 데이터 로딩, 조건부 fetch, 마우스 포인터 |
+| `02_state_design.jsx` | 4가지 state 설계 원칙 (묶기, 불필요 피하기, 모순 피하기, 불변성) |
+| `03_object_array_state.jsx` | 객체/중첩 객체/배열/복합 구조 state 업데이트 |
