@@ -1,0 +1,94 @@
+/* BucketItem.module.css — 개별 항목 카드 스타일 */
+
+/* 항목 카드 */
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: white;
+  border-radius: 12px;
+  border: 1.5px solid #f3f4f6;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  cursor: default;
+}
+
+.item:hover {
+  border-color: #c4b5fd;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.1);
+}
+
+/* 완료된 항목은 배경색을 살짝 바꿉니다 */
+.item.completed {
+  background: #fafafa;
+  border-color: #e5e7eb;
+}
+
+/* 왼쪽 영역 (체크박스 + 텍스트) */
+.left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  cursor: pointer;
+  user-select: none;        /* 클릭 시 텍스트가 드래그 선택되지 않도록 */
+}
+
+/* 커스텀 체크박스 */
+.checkbox {
+  flex-shrink: 0;           /* 체크박스는 줄어들지 않습니다 */
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid #d1d5db;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  transition: all 0.2s ease;
+  color: white;
+}
+
+/* 완료 상태의 체크박스 — 보라색으로 채웁니다 */
+.checkbox.checkboxDone {
+  background: #6366f1;
+  border-color: #6366f1;
+}
+
+/* 항목 텍스트 */
+.text {
+  font-size: 0.95rem;
+  color: #1e293b;
+  line-height: 1.5;
+  transition: color 0.2s, text-decoration 0.2s;
+}
+
+/* 완료된 항목의 텍스트 — 취소선 + 흐릿한 색 */
+.item.completed .text {
+  text-decoration: line-through;
+  color: #9ca3af;
+}
+
+/* 삭제 버튼 */
+.deleteBtn {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #d1d5db;
+  font-size: 0.8rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.15s;
+  margin-left: 8px;
+}
+
+.deleteBtn:hover {
+  background: #fee2e2;
+  color: #ef4444;
+}

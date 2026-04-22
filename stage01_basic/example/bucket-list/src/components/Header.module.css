@@ -1,0 +1,43 @@
+/* Header.module.css — 헤더 컴포넌트 스타일 */
+
+/* 헤더 전체 영역 — 그라디언트 배경으로 시각적 임팩트 */
+.header {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: white;
+  padding: 32px 24px 24px;
+  text-align: center;
+}
+
+/* 앱 제목 */
+.title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  margin-bottom: 6px;
+  letter-spacing: -0.5px;
+}
+
+/* 달성률 안내 문구 */
+.subtitle {
+  font-size: 0.95rem;
+  opacity: 0.85;
+  margin-bottom: 16px;
+}
+
+/* 진행률 바 트랙 (배경 — 회색 라인) */
+.progressTrack {
+  max-width: 400px;
+  margin: 0 auto;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 999px;        /* 완전히 둥근 끝처리 */
+  overflow: hidden;
+}
+
+/* 진행률 바 채움 (동적 너비는 인라인 style로 설정) */
+.progressFill {
+  height: 100%;
+  background: white;
+  border-radius: 999px;
+  transition: width 0.4s ease; /* 너비 변경 시 부드러운 애니메이션 */
+  min-width: 4px;              /* 1%여도 살짝 보이게 */
+}

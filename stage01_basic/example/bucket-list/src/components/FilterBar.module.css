@@ -1,0 +1,61 @@
+/* FilterBar.module.css — 필터 탭 스타일 */
+
+/* 탭들을 한 줄로 나열하는 컨테이너 */
+.filterBar {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+/* 개별 탭 버튼 */
+.tab {
+  flex: 1;                  /* 탭들이 균등하게 너비를 나눠 가집니다 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 8px;
+  background: white;
+  color: #6b7280;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.tab:hover {
+  border-color: #c4b5fd;
+  color: #7c3aed;
+  background: #faf5ff;
+}
+
+/* 선택된 탭 — 보라색으로 강조 */
+.tab.active {
+  border-color: #6366f1;
+  background: #eef2ff;
+  color: #4f46e5;
+  font-weight: 700;
+}
+
+/* 항목 수 뱃지 */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: #f3f4f6;
+  color: #6b7280;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* 선택된 탭의 뱃지는 더 진한 보라색 */
+.tab.active .badge {
+  background: #c7d2fe;
+  color: #3730a3;
+}

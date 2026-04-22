@@ -1,0 +1,16 @@
+/* index.css — 전역 초기화 스타일 */
+
+/* 브라우저마다 다른 기본 스타일을 초기화합니다 */
+*, *::before, *::after {
+  box-sizing: border-box; /* padding이 width에 포함되도록 */
+  margin: 0;
+  padding: 0;
+}
+
+/* 앱 전체 폰트 및 배경 색상 */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background-color: #f5f3ff; /* 연한 보라 배경 */
+  color: #1e293b;
+  min-height: 100vh;
+}
